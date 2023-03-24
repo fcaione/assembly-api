@@ -29,9 +29,6 @@ class SingleUser(Resource):
         return user.json()
 
     def delete(self, user_id):
-        user = User.find_by_id(user_id)
-        if not user:
-            return {"msg": "user not found"}, 404
-        db.session.delete(user)
-        db.session.commit()
-        return {"msg": "User Deleted", "payload": user_id}
+        User.delete_user(user_id)
+        return {'message': 'User Deleted'}, 200
+

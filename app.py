@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from models.db import db
 from models import organization, user, user_organization
-from resources import user
+from resources import user, organization
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +20,8 @@ migrate = Migrate(app, db)
 
 api.add_resource(user.Users, "/users")
 api.add_resource(user.SingleUser, "/users/<int:user_id>")
+api.add_resource(organization.Organizations, "/organizations")
+api.add_resource(organization.SingleOrganization, "/organizations/<int:org_id>")
 
 if __name__ == '__main__':
     app.run(debug=True)

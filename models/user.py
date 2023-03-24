@@ -54,4 +54,3 @@ class User(db.Model):
         user = db.get_or_404(cls, id, description=f'Record with id:{id} is not available')
         db.session.delete(user)
         db.session.commit()
-        return {'message': 'User Deleted'}, 204
