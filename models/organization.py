@@ -8,7 +8,7 @@ class Organization(db.Model):
     type = db.Column(db.String(150), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
-    users = db.relationship("user_organizations", foreign_keys="user_id")
+    users = db.relationship("User", secondary="user_organizations")
 
     def __init__(self, name, type):
         self.name = name

@@ -1,8 +1,8 @@
 """user, organization, user_organization model + assocs
 
-Revision ID: f1038e425782
+Revision ID: 7660474b5d0f
 Revises: 
-Create Date: 2023-03-24 15:28:30.135071
+Create Date: 2023-03-24 16:04:16.212477
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f1038e425782'
+revision = '7660474b5d0f'
 down_revision = None
 branch_labels = None
 depends_on = None
