@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -19,6 +19,16 @@ api = Api(app)
 
 db.init_app(app)
 migrate = Migrate(app, db)
+
+@app.route("/signin", methods=["POST"])
+def signin():
+    data = request.get_json()
+    u = user.User.query.filter_by(email=data.get("email")).first()
+    print(u.password)
+    print(data.get("password"))
+    if bcrypt.check_password_hash(u.password, data.get("password")):
+        return "nice"
+    return "bad"
 
 api.add_resource(user.Users, "/users")
 api.add_resource(user.SingleUser, "/users/<int:user_id>")

@@ -1,8 +1,8 @@
-"""user, organization, user_organization model + assocs
+"""update user model email unique contraint
 
-Revision ID: f1038e425782
-Revises: 
-Create Date: 2023-03-24 15:28:30.135071
+Revision ID: cece84304ee4
+Revises: a1e4bbf9e14a
+Create Date: 2023-03-27 14:08:33.342071
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f1038e425782'
-down_revision = None
+revision = 'cece84304ee4'
+down_revision = 'a1e4bbf9e14a'
 branch_labels = None
 depends_on = None
 
@@ -33,12 +33,15 @@ def upgrade():
     sa.Column('password', sa.String(length=255), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_table('user_organizations',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('organization_id', sa.Integer(), nullable=False),
+    sa.Column('role', sa.String(length=150), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['organization_id'], ['organizations.id'], ),

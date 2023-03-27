@@ -14,7 +14,7 @@ class Users(Resource):
         data = request.get_json()      
         hashed_data = {
             **data,
-            "password": bcrypt.generate_password_hash(data["password"])
+            "password": bcrypt.generate_password_hash(data["password"]).decode("utf8")
             }
         user = User(**hashed_data)
         user.create()
