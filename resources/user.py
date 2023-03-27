@@ -2,7 +2,11 @@ from flask import request
 from flask_restful import Resource
 from models.user import User
 from models.db import db
+from flask_bcrypt import Bcrypt
 from sqlalchemy.orm import joinedload
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
+
+bcrypt = Bcrypt()
 
 class Users(Resource):
     def get(self):
@@ -19,6 +23,17 @@ class Users(Resource):
         user = User(**hashed_data)
         user.create()
         return user.json(), 201
+
+class SignIn(Resource):
+    def post(self):
+        data = request.get_json()
+        u = User.query.filter_by(email=data.get("email")).first()
+        if not u:
+            return f"user with email: {data.get('email')} does not exist"
+        if bcrypt.check_password_hash(u.password, data.get("password")):
+            access_token = create_access_token(identity=u.id)
+            return {"token": access_token, "user_id": u.id}
+        return "password incorrect"
 
 class SingleUser(Resource):
     def get(self, user_id):
@@ -37,5 +52,3 @@ class SingleUser(Resource):
     def delete(self, user_id):
         User.delete_user(user_id)
         return {'message': 'User Deleted'}, 200
-
-from app import bcrypt

@@ -3,39 +3,35 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_migrate import Migrate
 from models.db import db
+from resources.organization import Organizations, SingleOrganization
+from resources.user import Users, SingleUser, SignIn
+from resources.user_organization import UserOrganizations, SingleUserOrganization
 from models import user, organization, user_organization
-from resources import user, organization, user_organization
-from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
 CORS(app)
 
+load_dotenv()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://localhost:5432/flask_assembly_db"
 app.config['SQLALCHEMY_ECHO'] = True
+app.config['JWT_SECRET_KEY'] = os.environ.get("SECRET_KEY")
 
-api = Api(app)
-
+JWTManager(app)
 db.init_app(app)
 migrate = Migrate(app, db)
+api = Api(app)
 
-@app.route("/signin", methods=["POST"])
-def signin():
-    data = request.get_json()
-    u = user.User.query.filter_by(email=data.get("email")).first()
-    print(u.password)
-    print(data.get("password"))
-    if bcrypt.check_password_hash(u.password, data.get("password")):
-        return "nice"
-    return "bad"
-
-api.add_resource(user.Users, "/users")
-api.add_resource(user.SingleUser, "/users/<int:user_id>")
-api.add_resource(organization.Organizations, "/organizations")
-api.add_resource(organization.SingleOrganization, "/organizations/<int:org_id>")
-api.add_resource(user_organization.UserOrganizations, "/user/organizations")
-api.add_resource(user_organization.SingleUserOrganization, "/user/organizations/<int:id>")
+api.add_resource(Users, "/users")
+api.add_resource(SignIn, "/signin")
+api.add_resource(SingleUser, "/users/<int:user_id>")
+api.add_resource(Organizations, "/organizations")
+api.add_resource(SingleOrganization, "/organizations/<int:org_id>")
+api.add_resource(UserOrganizations, "/user/organizations")
+api.add_resource(SingleUserOrganization, "/user/organizations/<int:id>")
 
 if __name__ == '__main__':
     app.run(debug=True)
