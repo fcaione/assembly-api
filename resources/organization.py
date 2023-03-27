@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from models.organization import Organization
 from models.db import db
+from sqlalchemy.orm import joinedload
 
 class Organizations(Resource):
     def get(self):
@@ -16,8 +17,9 @@ class Organizations(Resource):
     
 class SingleOrganization(Resource):
     def get(self, org_id):
-        org = Organization.find_by_id(org_id)
-        return org.json()
+        org = Organization.query.options(joinedload(Organization.users)).filter_by(id=org_id).first()
+        users = [u.json() for u in org.users]
+        return {**org.json(), "users": users}
     
     def delete(self, org_id):
         Organization.delete_organization(org_id)

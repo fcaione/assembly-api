@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource
 from models.user import User
 from models.db import db
+from sqlalchemy.orm import joinedload
 
 class Users(Resource):
     def get(self):
@@ -14,11 +15,11 @@ class Users(Resource):
         user.create()
         return user.json(), 201
 
-
 class SingleUser(Resource):
     def get(self, user_id):
-        user = User.find_by_id(user_id)
-        return user.json()
+        user = User.query.options(joinedload(User.organizations)).filter_by(id=user_id).first()
+        orgs = [t.json() for t in user.organizations]
+        return {**user.json(), "organizations": orgs}
 
     def put(self, user_id):
         data = request.get_json()
