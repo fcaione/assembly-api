@@ -3,10 +3,12 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_migrate import Migrate
 from models.db import db
-from models import organization, user, user_organization
+from models import user, organization, user_organization
 from resources import user, organization, user_organization
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 CORS(app)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

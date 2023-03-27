@@ -9,9 +9,14 @@ class Users(Resource):
         users = User.find_all()
         return [u.json() for u in users]
 
+    # Create User
     def post(self):
-        data = request.get_json()
-        user = User(**data)
+        data = request.get_json()      
+        hashed_data = {
+            **data,
+            "password": bcrypt.generate_password_hash(data["password"])
+            }
+        user = User(**hashed_data)
         user.create()
         return user.json(), 201
 
@@ -33,3 +38,4 @@ class SingleUser(Resource):
         User.delete_user(user_id)
         return {'message': 'User Deleted'}, 200
 
+from app import bcrypt
