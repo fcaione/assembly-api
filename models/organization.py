@@ -9,18 +9,20 @@ class Organization(db.Model):
     type = db.Column(db.String(150), nullable=False)
     icon = db.Column(db.String(500), nullable=False)
     description = db.Column(db.String(500), nullable=False)
+    location = db.Column(db.String(500), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
     users = db.relationship("User", secondary="user_organizations")
     owned_by = db.relationship("User", back_populates="organizations_owned")
 
-    def __init__(self, name, type, icon, description, owner_id):
+    def __init__(self, name, type, icon, description, location, owner_id):
         self.name = name
         self.type = type
         self.icon = icon
         self.description = description
         self.owner_id = owner_id
+        self.location = location
 
     def json(self):
         return {
