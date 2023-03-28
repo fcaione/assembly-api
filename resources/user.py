@@ -4,7 +4,7 @@ from models.user import User
 from models.db import db
 from flask_bcrypt import Bcrypt
 from sqlalchemy.orm import joinedload
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 bcrypt = Bcrypt()
 
@@ -28,12 +28,13 @@ class SignIn(Resource):
     def post(self):
         data = request.get_json()
         u = User.query.filter_by(email=data.get("email")).first()
-        if not u:
+        print(u)
+        if u == "None":
             return f"user with email: {data.get('email')} does not exist"
         if bcrypt.check_password_hash(u.password, data.get("password")):
             access_token = create_access_token(identity=u.id)
             return {"token": access_token, "user_id": u.id}
-        return "password incorrect"
+        return {"error": "password does not match password in database"}, 401
 
 class SingleUser(Resource):
     def get(self, user_id):

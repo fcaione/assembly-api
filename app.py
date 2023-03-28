@@ -8,8 +8,8 @@ from resources.user import Users, SingleUser, SignIn
 from resources.user_organization import UserOrganizations, SingleUserOrganization
 from models import user, organization, user_organization
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
-import os
 from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app)

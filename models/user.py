@@ -12,6 +12,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
     organizations = db.relationship("Organization",secondary="user_organizations")
+    organizations_owned = db.relationship("Organization", back_populates="owned_by")
 
     def __init__(self, name, email, password):
         self.name = name
