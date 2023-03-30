@@ -2,9 +2,11 @@ from flask import request
 from flask_restful import Resource
 from models.organization import Organization
 from models.user import User
+from models.user_organization import UserOrganization
 from models.db import db
 from sqlalchemy.orm import joinedload
 from flask_jwt_extended import get_jwt_identity, jwt_required
+import json
 
 class Organizations(Resource):
     def get(self):
@@ -24,9 +26,19 @@ class Organizations(Resource):
     
 class SingleOrganization(Resource):
     def get(self, org_id):
-        org = Organization.query.options(joinedload(Organization.users)).filter_by(id=org_id).first()
-        users = [u.json() for u in org.users]
-        return {**org.json(), "users": users}
+        org = Organization.find_by_id(org_id)
+
+        if org is None:
+            return {"message": f"Organization with id {org_id} not found"}, 404
+        user_organizations = [{
+            "user": u.user.json(),
+            "role": u.role,
+            "is_active": u.is_active
+        } for u in org.user_organizations]
+        
+        users = [u.user.json() for u in org.user_organizations]
+        
+        return {**org.json(),  "users": user_organizations}
     
     @jwt_required()
     def delete(self, org_id):

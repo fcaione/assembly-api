@@ -1,6 +1,8 @@
 from models.db import db
 from datetime import datetime
 from flask import request
+from sqlalchemy.orm import joinedload
+
 
 class UserOrganization(db.Model):
     __tablename__ = "user_organizations"
@@ -12,6 +14,8 @@ class UserOrganization(db.Model):
     is_active = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
+    user = db.relationship('User')
+    organization = db.relationship('Organization', back_populates='user_organizations')
 
     def __init__(self, user_id, organization_id, role, is_active):
         self.user_id = user_id

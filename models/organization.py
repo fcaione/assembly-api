@@ -1,6 +1,8 @@
 from models.db import db
 from datetime import datetime
 from flask import request
+from models.user_organization import UserOrganization
+from sqlalchemy.orm import joinedload
 
 class Organization(db.Model):
     __tablename__ = "organizations"
@@ -15,6 +17,7 @@ class Organization(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
     users = db.relationship("User", secondary="user_organizations")
     owned_by = db.relationship("User", back_populates="organizations_owned")
+    user_organizations = db.relationship('UserOrganization', back_populates='organization')
 
     def __init__(self, name, type, icon, description, location, owner_id):
         self.name = name
@@ -31,6 +34,7 @@ class Organization(db.Model):
             "type": self.type,
             "icon": self.icon,
             "description": self.description,
+            "location": self.location,
             "owner_id": self.owner_id,
             "created_at": str(self.created_at),
             "updated_at": str(self.updated_at),
@@ -47,7 +51,8 @@ class Organization(db.Model):
     
     @classmethod
     def find_by_id(cls, id):
-        return db.get_or_404(cls, id, description=f'Record with id:{id} is not available')
+        org = Organization.query.options(joinedload(Organization.user_organizations).joinedload(UserOrganization.user)).get(id)
+        return org
     
     @classmethod
     def update_organization(cls, id):

@@ -22,5 +22,3 @@ class SingleUserOrganization(Resource):
     def delete(self, id):
         UserOrganization.delete_user_organization(id)
         return {'message': 'Organization Deleted'}, 200
-
-
