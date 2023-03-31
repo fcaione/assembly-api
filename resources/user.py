@@ -44,7 +44,8 @@ class SingleUser(Resource):
         orgs = [{
             "organization": u.organization.json(),
             "role": u.role,
-            "is_active": u.is_active
+            "is_active": u.is_active,
+            "id": u.id
         } for u in user._user_organizations]
 
         return {**user.json(), "organizations": orgs}

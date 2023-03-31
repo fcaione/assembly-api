@@ -33,7 +33,7 @@ class SingleOrganization(Resource):
         user_organizations = [{
             "user": u.user.json(),
             "role": u.role,
-            "is_active": u.is_active
+            "is_active": u.is_active,
         } for u in org.user_organizations]
         
         return {**org.json(),  "users": user_organizations}
