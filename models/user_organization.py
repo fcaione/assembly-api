@@ -14,7 +14,7 @@ class UserOrganization(db.Model):
     is_active = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
-    user = db.relationship('User')
+    user = db.relationship('User', back_populates="_user_organizations")
     organization = db.relationship('Organization', back_populates='user_organizations')
 
     def __init__(self, user_id, organization_id, role, is_active):

@@ -1,6 +1,8 @@
 from flask import request
 from flask_restful import Resource
 from models.user import User
+from models.organization import Organization
+from models.user_organization import UserOrganization
 from models.db import db
 from flask_bcrypt import Bcrypt
 from sqlalchemy.orm import joinedload
@@ -38,8 +40,13 @@ class SignIn(Resource):
 
 class SingleUser(Resource):
     def get(self, user_id):
-        user = User.query.options(joinedload(User.organizations)).filter_by(id=user_id).first()
-        orgs = [t.json() for t in user.organizations]
+        user = User.query.options(joinedload(User._user_organizations).joinedload(UserOrganization.organization)).get(user_id)
+        orgs = [{
+            "organization": u.organization.json(),
+            "role": u.role,
+            "is_active": u.is_active
+        } for u in user._user_organizations]
+
         return {**user.json(), "organizations": orgs}
 
     def put(self, user_id):

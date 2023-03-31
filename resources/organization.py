@@ -36,8 +36,6 @@ class SingleOrganization(Resource):
             "is_active": u.is_active
         } for u in org.user_organizations]
         
-        users = [u.user.json() for u in org.user_organizations]
-        
         return {**org.json(),  "users": user_organizations}
     
     @jwt_required()
