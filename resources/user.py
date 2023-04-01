@@ -41,14 +41,19 @@ class SignIn(Resource):
 class SingleUser(Resource):
     def get(self, user_id):
         user = User.query.options(joinedload(User._user_organizations).joinedload(UserOrganization.organization)).get(user_id)
+        orgs_owned = User.query.options(joinedload(User.organizations_owned)).get(user_id)
+
+        orgs_owned = [o.json() for o in orgs_owned.organizations_owned]
+
         orgs = [{
             "organization": u.organization.json(),
             "role": u.role,
             "is_active": u.is_active,
-            "id": u.id
+            "id": u.id,
+            "user_id": u.user_id
         } for u in user._user_organizations]
 
-        return {**user.json(), "organizations": orgs}
+        return {**user.json(), "organizations": orgs, "organizations_owned": orgs_owned}
 
     def put(self, user_id):
         data = request.get_json()

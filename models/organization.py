@@ -58,8 +58,8 @@ class Organization(db.Model):
     def update_organization(cls, id):
         org = db.get_or_404(cls, id, description=f'Record with id:{id} is not available')
         data = request.get_json()
-        org.name = data['name']
-        org.type = data['type']
+        for key, value in data.items():
+            setattr(org, key, value)
         db.session.commit()
         return org.json()
     

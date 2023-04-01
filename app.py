@@ -10,8 +10,6 @@ from models import user, organization, user_organization
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from dotenv import load_dotenv
 import os
-from sqlalchemy.orm import configure_mappers
-configure_mappers()
 
 app = Flask(__name__)
 CORS(app)

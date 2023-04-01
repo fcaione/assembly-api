@@ -38,7 +38,11 @@ class SingleOrganization(Resource):
         
         return {**org.json(),  "users": user_organizations}
     
-    @jwt_required()
+    def put(self, org_id):
+        Organization.update_organization(org_id)
+        return {"message": "Organization updated"}, 200
+    
+    # @jwt_required()
     def delete(self, org_id):
         Organization.delete_organization(org_id)
         return {'message': 'Organization Deleted'}, 200
