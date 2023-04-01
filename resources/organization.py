@@ -13,16 +13,21 @@ class Organizations(Resource):
         orgs = Organization.find_all()
         return [o.json() for o in orgs]
     
-    @jwt_required()
+    # @jwt_required()
+    # def post(self):
+    #     identity = get_jwt_identity()
+    #     user = User.find_by_id(identity)
+    #     if user:
+    #         data = request.get_json()
+    #         org = Organization(**data)
+    #         org.create()
+    #         return org.json()
+    #     return {"msg": "user not authenticated"}
     def post(self):
-        identity = get_jwt_identity()
-        user = User.find_by_id(identity)
-        if user:
-            data = request.get_json()
-            org = Organization(**data)
-            org.create()
-            return org.json()
-        return {"msg": "user not authenticated"}
+        data = request.get_json()
+        org = Organization(**data)
+        org.create()
+        return org.json()
     
 class SingleOrganization(Resource):
     def get(self, org_id):
