@@ -10,7 +10,7 @@ class Organization(db.Model):
     name = db.Column(db.String(150), nullable=False)
     type = db.Column(db.String(150), nullable=False)
     icon = db.Column(db.String(500), nullable=False)
-    description = db.Column(db.String(500), nullable=False)
+    description = db.Column(db.String(1000), nullable=False)
     location = db.Column(db.String(500), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)

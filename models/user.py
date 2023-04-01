@@ -8,6 +8,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     email = db.Column(db.String(255), unique=True)
+    profile_picture = db.Column(db.String(500), nullable=False, default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
     password = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
@@ -26,6 +27,7 @@ class User(db.Model):
                 "name": self.name,
                 "email": self.email,
                 "password": self.password,
+                "profile_picture": self.profile_picture,
                 "created_at": str(self.created_at),
                 "updated_at": str(self.updated_at)}
     
