@@ -23,6 +23,8 @@ if DATABASE_URL:
         "://", "ql://", 1)
     app.config['SQLALCHEMY_ECHO'] = False
     app.env = 'production'
+    app.config['JWT_SECRET_KEY'] = os.environ.get("SECRET_KEY")
+
 else:
     app.debug = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
