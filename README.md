@@ -19,7 +19,9 @@ Assembly is an app designed for professional connection. Connect with people fro
 ***
 
 ### ***Screenshots***
-
+![Landing Page](./images/landing%20page.png)
+![Organizations renders](./images/orgs.png)
+![Profile Page](./images/profile.png)
 ***
 
 ### ***Future Updates***
