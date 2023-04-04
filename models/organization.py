@@ -17,7 +17,7 @@ class Organization(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
     users = db.relationship("User", secondary="user_organizations")
     owned_by = db.relationship("User", back_populates="organizations_owned")
-    user_organizations = db.relationship('UserOrganization', back_populates='organization')
+    user_organizations = db.relationship('UserOrganization', back_populates='organization', cascade='all, delete')
 
     def __init__(self, name, type, icon, description, location, owner_id):
         self.name = name

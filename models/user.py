@@ -14,7 +14,7 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,nullable=False, onupdate=datetime.now())
     organizations = db.relationship("Organization",secondary="user_organizations")
     organizations_owned = db.relationship("Organization", back_populates="owned_by")
-    _user_organizations = db.relationship('UserOrganization', back_populates='user')
+    _user_organizations = db.relationship('UserOrganization', back_populates='user', cascade='all, delete')
 
 
     def __init__(self, name, email, password):

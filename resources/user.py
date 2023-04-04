@@ -43,16 +43,25 @@ class SingleUser(Resource):
         user = User.query.options(joinedload(User._user_organizations).joinedload(UserOrganization.organization)).get(user_id)
         orgs_owned = User.query.options(joinedload(User.organizations_owned)).get(user_id)
 
-        orgs_owned = [o.json() for o in orgs_owned.organizations_owned]
+        if user is None:
+            return
 
-        orgs = [{
-            "organization": u.organization.json(),
-            "role": u.role,
-            "is_active": u.is_active,
-            "id": u.id,
-            "user_id": u.user_id
-        } for u in user._user_organizations]
+        if user._user_organizations is not None:
+            orgs = [{
+                 "organization": u.organization.json(),
+                 "role": u.role,
+                 "is_active": u.is_active,
+                 "id": u.id,
+                 "user_id": u.user_id
+             } for u in user._user_organizations]
+        else:
+            orgs = []
 
+        if orgs_owned is not None:
+            orgs_owned = [o.json() for o in orgs_owned.organizations_owned]
+        else:
+            orgs_owned = []
+            
         return {**user.json(), "organizations": orgs, "organizations_owned": orgs_owned}
 
     def put(self, user_id):
