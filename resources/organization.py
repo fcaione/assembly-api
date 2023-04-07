@@ -13,21 +13,16 @@ class Organizations(Resource):
         orgs = Organization.find_all()
         return [o.json() for o in orgs]
     
-    # @jwt_required()
-    # def post(self):
-    #     identity = get_jwt_identity()
-    #     user = User.find_by_id(identity)
-    #     if user:
-    #         data = request.get_json()
-    #         org = Organization(**data)
-    #         org.create()
-    #         return org.json()
-    #     return {"msg": "user not authenticated"}
+    @jwt_required()
     def post(self):
-        data = request.get_json()
-        org = Organization(**data)
-        org.create()
-        return org.json()
+        identity = get_jwt_identity()
+        user = User.find_by_id(identity)
+        if user:
+            data = request.get_json()
+            org = Organization(**data)
+            org.create()
+            return org.json()
+        return {"msg": "user not authenticated"}
     
 class SingleOrganization(Resource):
     def get(self, org_id):
@@ -43,11 +38,21 @@ class SingleOrganization(Resource):
         
         return {**org.json(),  "users": user_organizations}
     
+    @jwt_required()
     def put(self, org_id):
-        Organization.update_organization(org_id)
-        return {"message": "Organization updated"}, 200
+        identity = get_jwt_identity()
+        user = User.find_by_id(identity)
+        if user:
+            Organization.update_organization(org_id)
+            return {"message": "Organization updated"}, 200
+        return {"msg": "user not authenticated"}
+        
     
-    # @jwt_required()
+    @jwt_required()
     def delete(self, org_id):
-        Organization.delete_organization(org_id)
-        return {'message': 'Organization Deleted'}, 200
+        identity = get_jwt_identity()
+        user = User.find_by_id(identity)
+        if user:
+            Organization.delete_organization(org_id)
+            return {'message': 'Organization Deleted'}, 200
+        return {"msg": "user not authenticated"}
