@@ -11,27 +11,36 @@ class UserOrganizations(Resource):
         orgs = UserOrganization.find_all()
         return [o.json() for o in orgs]
     
-    # @jwt_required()
+    @jwt_required()
     def post(self):
-        # identity = get_jwt_identity()
-        # print(identity)
-        # user = User.find_by_id(identity)
-        # if user:
-        data = request.get_json()
-        org = UserOrganization(**data)
-        org.create()
-        return org.json()
-        # return {"msg": "unauthorized"}
+        identity = get_jwt_identity()
+        user = User.find_by_id(identity)
+        if user:
+            data = request.get_json()
+            org = UserOrganization(**data)
+            org.create()
+            return org.json()
+        return {"msg": "unauthorized"}
     
 class SingleUserOrganization(Resource):
     def get(self, org_id):
         org = UserOrganization.find_by_id(org_id)
         return org.json()
     
+    @jwt_required()
     def delete(self, id):
-        UserOrganization.delete_user_organization(id)
-        return {'message': 'Organization Deleted'}, 200
+        identity = get_jwt_identity()
+        user = User.find_by_id(identity)
+        if user:
+            UserOrganization.delete_user_organization(id)
+            return {'message': 'Organization Deleted'}, 200
+        return {"msg": "unauthorized"}
     
+    @jwt_required()
     def put(self, id):
-        UserOrganization.update_user_organization(id)
-        return {"msg": "updated"}
+        identity = get_jwt_identity()
+        user = User.find_by_id(identity)
+        if user:
+            UserOrganization.update_user_organization(id)
+            return {"msg": "updated"}
+        return {"msg": "unauthorized"}
